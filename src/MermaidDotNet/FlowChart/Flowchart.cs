@@ -1,7 +1,8 @@
-﻿using MermaidDotNet.Models;
+﻿using System.Reflection;
 using System.Text;
+using MermaidDotNet.FlowChart.Models;
 
-namespace MermaidDotNet;
+namespace MermaidDotNet.FlowChart;
 
 public class Flowchart
 {
@@ -48,6 +49,65 @@ public class Flowchart
             }
         }
     }
+
+    private StringBuilder diagram;
+
+    public Flowchart(Type entryPoint)
+    {
+        Assembly callingAssembly = Assembly.GetCallingAssembly();
+        // Explorez les relations et générez le diagramme Mermaid
+        HashSet<Type> visitedTypes = new HashSet<Type>();
+        diagram = new StringBuilder();
+        diagram.AppendLine("classDiagram");
+        ExploreType(entryPoint, diagram, visitedTypes);
+    }
+
+    public string ToClassDiagram()
+    {
+        return diagram.ToString();
+    }
+    
+    private void ExploreType(Type type, StringBuilder sb, HashSet<Type> visitedTypes)
+    {
+        if (visitedTypes.Contains(type) || !type.IsClass || type.IsAbstract || !type.IsPublic)
+        {
+            return;
+        }
+
+        visitedTypes.Add(type);
+
+        // Ajoutez la classe au diagramme
+        sb.AppendLine($"class {type.Name} {{");
+        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Instance);
+        foreach (var property in properties)
+        {
+            sb.AppendLine($"  {property.PropertyType.Name} {property.Name}");
+
+            // Explorez les types des propriétés
+            if (property.PropertyType.IsClass && !property.PropertyType.IsAbstract && property.PropertyType.IsPublic)
+            {
+                ExploreType(property.PropertyType, sb, visitedTypes);
+                sb.AppendLine($"{type.Name} --> {property.PropertyType.Name}");
+            }
+        }
+        sb.AppendLine("}");
+
+        // Ajoutez les relations d'héritage
+        if (type.BaseType != null && type.BaseType != typeof(object))
+        {
+            ExploreType(type.BaseType, sb, visitedTypes);
+            sb.AppendLine($"{type.BaseType.Name} <|-- {type.Name}");
+        }
+
+        // Explorez les interfaces implémentées
+        var interfaces = type.GetInterfaces();
+        foreach (var interfaceType in interfaces)
+        {
+            ExploreType(interfaceType, sb, visitedTypes);
+            sb.AppendLine($"{interfaceType.Name} <|.. {type.Name}");
+        }
+    }
+
 
     /// <summary>
     /// Given a list of nodes and links, calculate the mermaid flowchart

@@ -1,5 +1,6 @@
-using MermaidDotNet.Models;
 using System.Xml.Linq;
+using MermaidDotNet.FlowChart;
+using MermaidDotNet.FlowChart.Models;
 
 namespace MermaidDotNet.Tests;
 

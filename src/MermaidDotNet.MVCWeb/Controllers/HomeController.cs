@@ -1,7 +1,8 @@
-using MermaidDotNet.Models;
 using MermaidDotNet.MVCWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using MermaidDotNet.FlowChart;
+using MermaidDotNet.FlowChart.Models;
 
 namespace MermaidDotNet.MVCWeb.Controllers
 {

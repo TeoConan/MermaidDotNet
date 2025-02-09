@@ -1,4 +1,4 @@
-﻿namespace MermaidDotNet.Models
+﻿namespace MermaidDotNet.FlowChart.Models
 {
     public class Node
     {

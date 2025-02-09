@@ -1,3 +1,6 @@
+using MermaidDotNet.FlowChart;
+using MermaidDotNet.FlowChart.Models;
+
 namespace MermaidDotNet.Tests;
 
 [TestClass]
@@ -74,7 +77,7 @@ public class FlowchartTests
         //Arrange
         try
         {
-            List<Models.Node> nodes = [new("node2", "node2")];
+            List<Node> nodes = [new("node2", "node2")];
             Flowchart flowchart = new("LR", nodes, new());
             flowchart.Links.Add(new("node1", "node2", "1"));
 
@@ -96,7 +99,7 @@ public class FlowchartTests
         //Arrange
         try
         {
-            List<Models.Node> nodes = [new("node1", "node1")];
+            List<Node> nodes = [new("node1", "node1")];
             Flowchart flowchart = new("LR", nodes, new());
             flowchart.Links.Add(new("node1", "node2", "1"));
 

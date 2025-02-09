@@ -19,5 +19,9 @@
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
+	
+	<ItemGroup>
+	  <Folder Include="Attributes\" />
+	</ItemGroup>
 
 </Project>
