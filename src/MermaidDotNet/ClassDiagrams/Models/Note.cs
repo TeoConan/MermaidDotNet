@@ -1,13 +1,13 @@
 namespace MermaidDotNet.ClassDiagrams.Models;
 
 /// <summary>
-/// 
+/// A simple note in a class diagram linked to a class
 /// </summary>
-/// <param name="text"></param>
-/// <param name="parent"></param>
-public class Note(string text, System.Type parent)
+/// <param name="text">Text to display</param>
+/// <param name="parent">Linked class</param>
+public class Note(string text, System.Type? parent = null)
 {
-    private readonly string? _className = new Type(parent).ToString();
+    private readonly string? _className = parent != null ? new Type(parent).ToString() : null;
 
     /// <inheritdoc />
     public override string ToString()

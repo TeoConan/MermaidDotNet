@@ -8,7 +8,12 @@ public class Type(System.Type type)
 {
     private readonly string _type = GetTypeName(type);
 
-    private static string GetTypeName(System.Type type)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static string GetTypeName(System.Type type)
     {
         if (!type.IsGenericType)
         {

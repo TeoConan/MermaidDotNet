@@ -1,20 +1,61 @@
+using System.Reflection;
+
 namespace MermaidDotNet.ClassDiagrams.Models;
 
-public class Property(string name, System.Type type, Visibility visibility)
+/// <summary>
+/// Represent a property in a class
+/// </summary>
+public class Property
 {
-    public string Name { get; } = name;
-    public Visibility Visibility { get; } = visibility;
-    public string Type { get; set; } = new Type(type).ToString();
+    /// <summary>
+    /// Name of property
+    /// </summary>
+    public string Name { get; }
 
-    public override string ToString()
+    /// <summary>
+    /// Type of property as string
+    /// </summary>
+    public System.Type Type { get; }
+    
+    /// <summary>
+    /// Maximum visibility of property in class
+    /// </summary>
+    public Visibility Visibility { get; set; }
+
+    private readonly string _output;
+
+    /// <summary>
+    /// Create a property usable in a Mermaid class diagram
+    /// </summary>
+    /// <param name="property"></param>
+    public Property(PropertyInfo property)
     {
-        if (Type == "Void") Type = "";
-        return $"{(char) Visibility}{Type} {Name}";
+        Type = property.PropertyType;
+        Name = property.Name;
+        Visibility = GetVisibility(property);
+        
+        var type = Models.Type.GetTypeName(Type);
+        if (type == "Void") type = "";
+        _output = $"{(char) Visibility}{type} {Name}";
+    }
+    
+    private static Visibility GetVisibility(PropertyInfo propertyInfo)
+    {
+        var method = propertyInfo.GetMethod ?? propertyInfo.SetMethod;
+        if (method == null) return Visibility.Private;
+
+        return method switch
+        {
+            { IsPublic: true } => Visibility.Public,
+            { IsPrivate: true } => Visibility.Private,
+            { IsFamily: true } => Visibility.Protected,
+            { IsAssembly: true } => Visibility.Internal,
+            { IsFamilyOrAssembly: true } => Visibility.ProtectedInternal,
+            { IsFamilyAndAssembly: true } => Visibility.PrivateProtected,
+            _ => Visibility.Private
+        };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Name, Visibility, Type);
-    }
+    public override string ToString() => _output;
 }

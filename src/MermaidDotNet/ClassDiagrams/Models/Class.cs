@@ -6,8 +6,15 @@ namespace MermaidDotNet.ClassDiagrams.Models;
 /// <param name="inputClass"></param>
 public class Class(System.Type inputClass)
 {
-    private string Name { get; set; } = new Type(inputClass).ToString();
-    public List<Property> Properties { get; set; } = [];
+    /// <summary>
+    /// Base's type of Class
+    /// </summary>
+    public System.Type Type { get; } = inputClass;
+    public string Name { get; } = new Type(inputClass).ToString();
+    /// <summary>
+    /// 
+    /// </summary>
+    public List<Property> Properties { get; } = [];
     /// <summary>
     /// 
     /// </summary>
